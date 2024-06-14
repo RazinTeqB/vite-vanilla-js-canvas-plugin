@@ -1,6 +1,6 @@
 ### MKD Builder Designer Plugin
 
-## Code splitting TBD (To be decided.)
+- ![alt text](sample.png)
 
 #### Setup
 
@@ -22,4 +22,4 @@ yarn build
 
 
 ToDO:
-- [ ] on zoom in and out/ also scale action overlay and attributes overlay
+- [x] on zoom in and out/ also scale action overlay and attributes overlay
