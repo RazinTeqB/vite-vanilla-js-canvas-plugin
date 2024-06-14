@@ -1,4 +1,4 @@
-### MKD Builder Designer Plugin
+### Kitchen Design Builder Plugin
 
 - ![alt text](sample.png)
 
