@@ -1,87 +1,92 @@
 import Konva from "konva";
 
 /**
- * @typedef { "a" } LShapeSideA
- * @typedef { "b" } LShapeSideB
- * @typedef { "c" } LShapeSideC
- * @typedef { "d" } LShapeSideD
- * @typedef { "e" } LShapeSideE
- * @typedef { "i" } LShapeSideI
- * @typedef { "ic" } LShapeSideIC
- * @typedef { "ib" } LShapeSideIB
- * @typedef { LShapeSideA | LShapeSideB | LShapeSideC | LShapeSideD | LShapeSideI | LShapeSideIC | LShapeSideIB } LShapeSide
- * @typedef { "a" | "b" | "c" | "d" | "e" | "i" } LShapeSideO
+ * @typedef { "a" } UShapeSideA
+ * @typedef { "b" } UShapeSideB
+ * @typedef { "c" } UShapeSideC
+ * @typedef { "d" } UShapeSideD
+ * @typedef { "e" } UShapeSideE
+ * @typedef { "f" } UShapeSideF
+ * @typedef { "i1" } UShapeSideI1
+ * @typedef { "i2" } UShapeSideI2
+ * @typedef { UShapeSideA | UShapeSideB | UShapeSideC | UShapeSideD | UShapeSideE |UShapeSideF | UShapeSideI1 | UShapeSideI2 } UShapeSide
+ * @typedef { "a" | "b" | "c" | "d" | "e" | "f" | "i1" | "i2" } UShapeSideO
  */
-export class LShapeHelper {
+export class UShapeHelper {
     /**
      * @static
-     * @type {LShapeSideA}
+     * @type {UShapeSideA}
      */
     static SideA = "a";
 
     /**
      * @static
-     * @type {LShapeSideB}
+     * @type {UShapeSideB}
      */
     static SideB = "b";
 
     /**
      * @static
-     * @type {LShapeSideC}
+     * @type {UShapeSideC}
      */
     static SideC = "c";
 
     /**
      * @static
-     * @type {LShapeSideD}
+     * @type {UShapeSideD}
      */
     static SideD = "d";
 
     /**
-     * For rounded corner checkbox.
+     *
      * @static
-     * @type {LShapeSideE}
+     * @type {UShapeSideE}
      */
     static SideE = "e";
+
+    /**
+     * @static
+     * @type {UShapeSideF}
+     */
+    static SideF = "f";
 
     /**
      *
      * Interior angle group.
      * @static
-     * @type {LShapeSideI}
+     * @type {UShapeSideI1}
      */
-    static SideI = "i";
+    static SideI1 = "i1";
 
     /**
      *
-     * Interior side.
+     * Interior angle group.
      * @static
-     * @type {LShapeSideIC}
+     * @type {UShapeSideI2}
      */
-    static SideIC = "ic";
+    static SideI2 = "i2";
 
     /**
-     *
-     * Interior side.
-     * @static
-     * @type {LShapeSideIB}
+     * @type {UShapeSideO[]}
      */
-    static SideIB = "ib";
-
     static sides = [
-        LShapeHelper.SideA,
-        LShapeHelper.SideB,
-        LShapeHelper.SideC,
-        LShapeHelper.SideD,
-        LShapeHelper.SideI,
+        UShapeHelper.SideA,
+        UShapeHelper.SideB,
+        UShapeHelper.SideC,
+        UShapeHelper.SideD,
+        UShapeHelper.SideE,
+        UShapeHelper.SideF,
+        UShapeHelper.SideI1,
+        UShapeHelper.SideI2,
     ];
 
     static corners = [
-        LShapeHelper.SideA,
-        LShapeHelper.SideB,
-        LShapeHelper.SideC,
-        LShapeHelper.SideD,
-        LShapeHelper.SideE,
+        UShapeHelper.SideA,
+        UShapeHelper.SideB,
+        UShapeHelper.SideC,
+        UShapeHelper.SideD,
+        UShapeHelper.SideE,
+        UShapeHelper.SideF,
     ];
 
     static wallBacksplashGap = 8;
@@ -94,34 +99,31 @@ export class LShapeHelper {
 
     /**
      *
-     * @param {LShapeSide} side
+     * @param {UShapeSide} side
      * @returns {boolean}
      */
     static isHorizontal(side) {
         return Boolean(
-            side === LShapeHelper.SideA ||
-                side === LShapeHelper.SideC ||
-                side === LShapeHelper.SideI ||
-                side === LShapeHelper.SideIB
+            side === UShapeHelper.SideA ||
+                side === UShapeHelper.SideC ||
+                side === UShapeHelper.SideE
         );
     }
 
     /**
      *
-     * @param {LShapeSide} side
+     * @param {UShapeSide} side
      * @returns {boolean}
      */
     static isFirstInHorizontalOrVertical(side) {
-        return Boolean(
-            side === LShapeHelper.SideA || side === LShapeHelper.SideB
-        );
+        return Boolean(side === UShapeHelper.SideA || side === UShapeHelper.SideB);
     }
 
     /**
      *
      * @typedef {"width" | "height"} SizeType
      *
-     * @param {LShapeSide | SizeType} side
+     * @param {UShapeSide | SizeType} side
      * @param {Konva.Group} shapeGroup
      *
      * @returns {Array<Konva.Group>}
@@ -145,7 +147,7 @@ export class LShapeHelper {
         const { x: x2, y: y2 } = point2;
         const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
-        return Math.trunc(distance);
+        return Math.abs(distance);
     }
 
     /**
@@ -180,7 +182,7 @@ export class LShapeHelper {
     /**
      * To get the starting and ending points coordinates.
      *
-     * @param {LShapeSide} side
+     * @param {UShapeSide} side
      * @param {number[]} points - Konva.Line.points
      *
      * @returns {PointsType[]}
@@ -192,8 +194,7 @@ export class LShapeHelper {
      * ```
      */
     static getSidePoints(side, points) {
-        const pointGroups =
-            LShapeHelper.convertKonvaLinePointsToPointsGroup(points);
+        const pointGroups = UShapeHelper.convertKonvaLinePointsToPointsGroup(points);
 
         let sidePoints;
         switch (side) {
@@ -204,13 +205,16 @@ export class LShapeHelper {
                 sidePoints = [pointGroups[1], pointGroups[2]];
                 break;
             case this.SideC:
-                sidePoints = [pointGroups[4], pointGroups[5]];
+                sidePoints = [pointGroups[2], pointGroups[3]];
                 break;
             case this.SideD:
                 sidePoints = [pointGroups[5], pointGroups[6]];
                 break;
-            case this.SideI:
-                sidePoints = [pointGroups[2], pointGroups[3]];
+            case this.SideE:
+                sidePoints = [pointGroups[6], pointGroups[7]];
+                break;
+            case this.SideF:
+                sidePoints = [pointGroups[7], pointGroups[8]];
                 break;
         }
 
@@ -219,16 +223,15 @@ export class LShapeHelper {
 
     /**
      *
-     * @param {LShapeSide | boolean} side - false to get all side lengths
+     * @param {UShapeSide | boolean} side - false to get all side lengths
      * @param {number[]} points - Konva.Line.points
      *
-     * @typedef {{ [key in LShapeSide]: number}} AllSideLengthsType
+     * @typedef {{ [key in UShapeSide]: number}} AllSideLengthsType
      *
      * @returns {Partial<AllSideLengthsType> | number}
      */
     static getSideLength(side, points) {
-        const pointGroups =
-            LShapeHelper.convertKonvaLinePointsToPointsGroup(points);
+        const pointGroups = UShapeHelper.convertKonvaLinePointsToPointsGroup(points);
 
         if (side === false) {
             // prettier-ignore
@@ -236,9 +239,10 @@ export class LShapeHelper {
             const allSideLengths = {
                 [this.SideA]: this.calculateDistance(pointGroups[0], pointGroups[1]),
                 [this.SideB]: this.calculateDistance(pointGroups[1], pointGroups[2]),
-                [this.SideC]: this.calculateDistance(pointGroups[4], pointGroups[5]),
+                [this.SideC]: this.calculateDistance(pointGroups[2], pointGroups[3]),
                 [this.SideD]: this.calculateDistance(pointGroups[5], pointGroups[6]),
-                [this.SideI]: this.calculateDistance(pointGroups[2], pointGroups[3])
+                [this.SideE]: this.calculateDistance(pointGroups[6], pointGroups[7]),
+                [this.SideF]: this.calculateDistance(pointGroups[7], pointGroups[8]),
             };
 
             return allSideLengths;
@@ -253,18 +257,21 @@ export class LShapeHelper {
                 length = this.calculateDistance(pointGroups[1], pointGroups[2]);
                 break;
             case this.SideC:
-                length = this.calculateDistance(pointGroups[4], pointGroups[5]);
+                length = this.calculateDistance(pointGroups[2], pointGroups[3]);
                 break;
             case this.SideD:
                 length = this.calculateDistance(pointGroups[5], pointGroups[6]);
                 break;
-            case this.SideI:
-                length = this.calculateDistance(pointGroups[2], pointGroups[3]);
+            case this.SideE:
+                length = this.calculateDistance(pointGroups[6], pointGroups[7]);
                 break;
-            case this.SideIB:
-                length = this.calculateDistance(pointGroups[2], pointGroups[3]);
+            case this.SideF:
+                length = this.calculateDistance(pointGroups[7], pointGroups[8]);
                 break;
-            case this.SideIC:
+            case this.SideI1:
+                length = this.calculateDistance(pointGroups[4], pointGroups[5]);
+                break;
+            case this.SideI2:
                 length = this.calculateDistance(pointGroups[3], pointGroups[4]);
                 break;
         }
@@ -274,10 +281,43 @@ export class LShapeHelper {
 
     /**
      *
+     * Get length between two points.
+     *
+     * @param {number} point1 - starting from 0 from top left corner
+     * @param {number} point2 - starting from 0 from top left corner
+     * @param {number[]} points - Konva.Line.points
+     *
+     * @returns {number}
+     */
+    static getPointDistance(point1, point2, points) {
+        const pointGroups = UShapeHelper.convertKonvaLinePointsToPointsGroup(points);
+
+        if (point1 > 8 || point1 < 1) {
+            throw new Error("Invalid argument exception: parameter point1 value is out of bound");
+        }
+        if (point2 > 8 || point2 < 1) {
+            throw new Error("Invalid argument exception: parameter point2 value is out of bound");
+        }
+
+        return this.calculateDistance(pointGroups[point1], pointGroups[point2]);
+    }
+
+    /**
+     *
      * @param {string | number} angle
      * @returns
      */
     static getInteriorAngleText(angle = 90) {
-        return `${this.AnglePrefix} ${angle} ${this.AnglePostfix}`;
+        return `${this.AnglePrefix}${angle}${this.AnglePostfix}`;
+    }
+
+    /**
+     *
+     * @param {UShapeSide} side
+     * 
+     * @returns boolean
+     */
+    static isInteriorAngle(side) {
+        return side === this.SideI1 || side === this.SideI2;
     }
 }

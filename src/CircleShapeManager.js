@@ -227,6 +227,9 @@ export default class CircleShapeManager {
         const shapeNode = this.getShapeObject(
             shapeGroup ?? this.currentHoverNode
         );
+
+        const scaleX = this.stage.scaleX();
+        this.actionOverlayNode.style.transform = `scale(${scaleX})`;
         const boxRect = shapeNode.getClientRect();
         const shapePosition = {
             x: boxRect.x + boxRect.width / 2,
@@ -235,8 +238,8 @@ export default class CircleShapeManager {
 
         const overlyRect = this.actionOverlayNode.getBoundingClientRect();
         const overlayNewPosition = {
-            left: shapePosition.x - overlyRect.width / 2,
-            top: shapePosition.y - overlyRect.height / 2,
+            left: shapePosition.x - (overlyRect.width / 2) / scaleX,
+            top: shapePosition.y - (overlyRect.height / 2) / scaleX,
         };
 
         this.actionOverlayNode.style.left = `${overlayNewPosition.left}px`;
@@ -278,7 +281,7 @@ export default class CircleShapeManager {
         let shapeGroup;
 
         if (onlyPlaceholder) {
-            const radius = shapeSize?.radius ? Number(shapeSize?.radius) : 50;
+            const radius = shapeSize?.radius ? Number(shapeSize?.radius) : 100;
             shapeGroup = new Konva.Group({
                 x: posX,
                 y: posY,
@@ -298,7 +301,7 @@ export default class CircleShapeManager {
             });
             shapeGroup.setAttr("canvasShapeId", shapeGroup._id);
             const circlePlaceHolderObject = new Konva.Circle({
-                radius: radius * SizeDiff,
+                radius: (radius / 2) * SizeDiff,
                 id: CircleShapeIds.CircleShapePlaceholderObject,
                 fill: "red",
                 opacity: 0.3,
@@ -485,10 +488,9 @@ export default class CircleShapeManager {
 
         const sideLabel = new Konva.Text({
             id: `text_node_${CSH.side}`,
-            text: CSH.side,
+            text: '⌀',
             fill: "#000",
             fontSize: 22,
-            fontStyle: "italic",
             fontVariant: "",
         });
         subGroup.add(sideLabel);
@@ -538,7 +540,7 @@ export default class CircleShapeManager {
             `#${CircleShapeIds.CircleSizeTextLayer}`
         );
         if (createInput === true && !radiusInput) {
-            const shapeSize = groupShapeObject.radius() / SizeDiff;
+            const shapeSize = (groupShapeObject.radius() * 2) / SizeDiff;
 
             radiusInput = new Konva.Text({
                 id: CircleShapeIds.CircleSizeTextLayer,
@@ -668,15 +670,16 @@ export default class CircleShapeManager {
             deleteInput && document.body.removeChild(inputBox);
         }
 
+        const value = Number(inputBoxValue);
         radiusLabelNode.text(inputBoxValue);
         this.setDragging(shapeGroup, true);
-        circlePlaceHolderObject.radius(Number(inputBoxValue) * SizeDiff);
+        circlePlaceHolderObject.radius((value / 2) * SizeDiff);
 
         this.updateHoverActionOverlayPosition(shapeGroup);
         this.updateEdgeGroupsPosition(shapeGroup);
 
         const shapeSize = shapeGroup.getAttr("shapeSize");
-        shapeSize["radius"] = inputBoxValue;
+        shapeSize["radius"] = value;
         shapeGroup.setAttr("shapeSize", shapeSize);
 
         this.eventManager.dispatchSizeUpdate(shapeGroup);
@@ -758,7 +761,7 @@ export default class CircleShapeManager {
             boxRect.x - attributeOverlayRect.width / 2
         }px`;
         attributeOverlay.style.top = `${
-            boxRect.y - attributeOverlayRect.height / 2
+            boxRect.y - 50 / 2
         }px`;
     }
 
@@ -818,8 +821,14 @@ export default class CircleShapeManager {
         domObject.id = `${domObject.id}-${propertyId}`;
         const image = domObject.querySelector("img");
         const titleElm = domObject.querySelector("span");
-        image.src = url;
-        image.alt = url.split("/").reverse()[0];
+        if(url != '') {
+            image.src = url;
+            image.alt = url.split("/").reverse()[0];
+        } else {
+            image.style.display = 'none';
+            const parentDiv = image.closest('div');
+            parentDiv.style.border = '1px solid #fff'; 
+        }
 
         titleElm.innerHTML = title;
 
